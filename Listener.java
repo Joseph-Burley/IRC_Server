@@ -34,7 +34,7 @@ public class Listener extends Thread
             clients.add(new user(welcomeSocket.accept())); //create the user and add them
             
             //problem lies here
-            clients.get(clients.size()-1).run(); //run the user/
+            clients.get(clients.size()-1).start(); //run the user/
          }
          catch(Exception e)
          {
