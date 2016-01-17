@@ -7,10 +7,12 @@ public class IRC_Server
 {
    public static void main(String args[]) throws Exception
    {
+      Scanner scan = new Scanner(System.in);
       List<user> clients = new ArrayList<user>();
-      String clientSentence;
+      String ServerInput;
       String capitalizedSentence;
       String userQuit = "/quit";
+      String userList = "/list";
       boolean running = true;
       
       //create listener thread that accecpts incoming connections
@@ -21,9 +23,32 @@ public class IRC_Server
       
       //DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
       
-      int j=0;
-      while(true)
+      
+      do
       {
+         System.out.println("/list to list users\n"+
+                            "/quit to stop server");
+         ServerInput = scan.nextLine();
+         
+         if(ServerInput.equals(userList))
+         {
+            for(int i=0; i<clients.size(); i++)
+            {
+               System.out.println(clients.get(i).toString());
+            }
+         }
+         else if(ServerInput.equals(userQuit))
+         {
+            running = false;
+            ears.quit();
+         }
+         else
+         {
+            System.out.println("Unrecognized Command");
+         }
+         
+         ServerInput = "";
+         /* don't do anything since users are threaded
          //System.out.println("On loop: " + j);
          for(int i=0; i<clients.size(); i++)
          {
@@ -34,7 +59,8 @@ public class IRC_Server
                System.out.println(clientSentence);
             }
          }
-      }
+         */
+      }while(running);
          /*
          clientSentence = inFromClient.readLine();
          if(clientSentence.equals(userQuit))
