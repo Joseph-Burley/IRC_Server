@@ -30,22 +30,26 @@ public class Listener extends Thread
    {
       do
       {
-         try{
-            clients.add(new user(welcomeSocket.accept())); //create the user and add them
-            
-            //problem lies here
-            clients.get(clients.size()-1).start(); //run the user/
-         }
-         catch(Exception e)
+         if(running)
          {
-            System.out.println("Could not add a Socket to client");
+            try{
+               clients.add(new user(welcomeSocket.accept(), clients)); //create the user and add them
+               clients.get(clients.size()-1).start(); //run the user
+               System.out.println("added client");
+            }
+            catch(Exception e)
+            {
+               System.out.println("Could not add a Socket to client");
+               System.out.println(e);
+            }
+            
          }
-         System.out.println("added client");
       }while(running);
    }
    
-   public void quit() //something to stop the thread
+   public void quit()throws Exception //something to stop the thread
    {
       running = false;
+      welcomeSocket.close();
    }
 }

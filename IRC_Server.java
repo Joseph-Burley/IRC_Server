@@ -41,6 +41,11 @@ public class IRC_Server
          {
             running = false;
             ears.quit();
+            ears = null;
+            for(int i=0; i<clients.size(); i++)
+            {
+               clients.get(i).quit();
+            }
          }
          else
          {
@@ -48,36 +53,8 @@ public class IRC_Server
          }
          
          ServerInput = "";
-         /* don't do anything since users are threaded
-         //System.out.println("On loop: " + j);
-         for(int i=0; i<clients.size(); i++)
-         {
-            //System.out.println("On client: " + i);
-            clientSentence = clients.get(i).read();
-            if(!clientSentence.equals(""))
-            {
-               System.out.println(clientSentence);
-            }
-         }
-         */
+         
       }while(running);
-         /*
-         clientSentence = inFromClient.readLine();
-         if(clientSentence.equals(userQuit))
-         {
-            System.out.println("The user quit the session");
-            break;
-         }
-         else
-         {
-            System.out.println("Received: "+clientSentence);
-            capitalizedSentence = clientSentence.toUpperCase() + '\n';
-            outToClient.writeBytes(capitalizedSentence);
-         }
-         */
-      
-      
-      
-      //System.out.println("got here");
+         
    }
 }
