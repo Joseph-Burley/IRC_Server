@@ -6,11 +6,15 @@ import java.util.*;
 
 public class user extends Thread
 {
+   private String nickName = "";
+   private String sentence;
+   private String userQuit = "/quit";
+   private String changeNick = "/nick";
    private Socket connection;
    private List<user> userList;
    private BufferedReader inFromClient;
-   private String sentence;
-   private String userQuit = "/quit";
+   private BufferedWriter outToClient;
+   
    private boolean running = true;
    
    user(Socket s, List<user> L)
@@ -20,13 +24,14 @@ public class user extends Thread
       try
       {
          inFromClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+         outToClient = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
       }
       catch(Exception e){
          System.out.println("Cannot create BufferedReader for user");
       }
    }
    
-   public void run() //for connection.close();
+   public void run() 
    {
       while(running)
       {
@@ -40,11 +45,32 @@ public class user extends Thread
             }
          }
          catch (Exception e){
+            System.out.println(e);
          }
          
          if(sentence.equals(userQuit))
          {
             quit();
+         }
+         else if(sentence.contains(changeNick))
+         {
+            String out = nickName + " changed name to: ";
+            //find first occurance of a space
+            int f = sentence.indexOf(' ');
+            //find next occurance of space
+            int s = sentence.indexOf(' ', f+1);
+            //make nickName a substring
+            nickName = sentence.substring(f+1, s);
+            out += nickName;
+            
+            System.out.println(out);
+            try{
+               outToClient.write(out, 0, out.length());
+            }
+            catch(Exception e){
+               System.out.println("Cannot send message to client\n" + e);
+            }
+            
          }
          else if(!sentence.equals(""))
          {
@@ -57,7 +83,8 @@ public class user extends Thread
          System.out.println("Quitting");
          connection.close();
          userList.remove(this);
-      }catch (Exception e){
+      }
+      catch (Exception e){
          System.out.println("Cannot quit user thread for some reason\n"+e);
       }
    }
