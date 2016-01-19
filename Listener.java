@@ -8,9 +8,10 @@ import java.util.*;
 
 public class Listener extends Thread
 {
-   List<user> clients;
-   int port = 6789;
-   ServerSocket welcomeSocket;
+   private List<user> clients;
+   private int port = 6789;
+   private ServerSocket welcomeSocket;
+   private boolean running = true;
    
    Listener(List<user> c) //constructor
    {
@@ -29,14 +30,26 @@ public class Listener extends Thread
    {
       do
       {
-         try{
-            clients.add(new user(welcomeSocket.accept()));
-         }
-         catch(Exception e)
+         if(running)
          {
-            System.out.println("Could not add a Socket to client");
+            try{
+               clients.add(new user(welcomeSocket.accept(), clients)); //create the user and add them
+               clients.get(clients.size()-1).start(); //run the user
+               System.out.println("added client");
+            }
+            catch(Exception e)
+            {
+               System.out.println("Could not add a Socket to client");
+               System.out.println(e);
+            }
+            
          }
-         System.out.println("added client");
-      }while(true);
+      }while(running);
+   }
+   
+   public void quit()throws Exception //something to stop the thread
+   {
+      running = false;
+      welcomeSocket.close();
    }
 }

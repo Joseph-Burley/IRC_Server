@@ -8,10 +8,12 @@ public class IRC_Server
 {
    public static void main(String args[]) throws Exception
    {
+      Scanner scan = new Scanner(System.in);
       List<user> clients = new ArrayList<user>();
-      String clientSentence;
+      String ServerInput;
       String capitalizedSentence;
       String userQuit = "/quit";
+      String userList = "/list";
       boolean running = true;
       
       //create listener thread that accecpts incoming connections
@@ -22,37 +24,38 @@ public class IRC_Server
       
       //DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
       
-      int j=0;
-      while(true)
+      
+      do
       {
-         //System.out.println("On loop: " + j);
-         for(int i=0; i<clients.size(); i++)
+         System.out.println("/list to list users\n"+
+                            "/quit to stop server");
+         ServerInput = scan.nextLine();
+         
+         if(ServerInput.equals(userList))
          {
-            //System.out.println("On client: " + i);
-            clientSentence = clients.get(i).read();
-            if(!clientSentence.equals(""))
+            for(int i=0; i<clients.size(); i++)
             {
-               System.out.println(clientSentence);
+               System.out.println(clients.get(i).toString());
             }
          }
-      }
-         /*
-         clientSentence = inFromClient.readLine();
-         if(clientSentence.equals(userQuit))
+         else if(ServerInput.equals(userQuit))
          {
-            System.out.println("The user quit the session");
-            break;
+            running = false;
+            ears.quit();
+            ears = null;
+            for(int i=0; i<clients.size(); i++)
+            {
+               clients.get(i).quit();
+            }
          }
          else
          {
-            System.out.println("Received: "+clientSentence);
-            capitalizedSentence = clientSentence.toUpperCase() + '\n';
-            outToClient.writeBytes(capitalizedSentence);
+            System.out.println("Unrecognized Command");
          }
-         */
-      
-      
-      
-      //System.out.println("got here");
+         
+         ServerInput = "";
+         
+      }while(running);
+         
    }
 }
