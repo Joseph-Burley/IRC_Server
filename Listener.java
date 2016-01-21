@@ -37,6 +37,10 @@ public class Listener extends Thread
                clients.get(clients.size()-1).start(); //run the user
                System.out.println("added client");
             }
+	    catch(SocketException s)
+	    {
+		
+	    }
             catch(Exception e)
             {
                System.out.println("Could not add a Socket to client");
