@@ -35,6 +35,7 @@ public class user extends Thread
    {
       while(running)
       {
+         //get the sentence from socket for parsing
          try{
             if(inFromClient.ready())
             {
@@ -47,6 +48,7 @@ public class user extends Thread
          catch (Exception e){
             System.out.println(e);
          }
+         
          
          if(sentence.equals(userQuit))
          {
@@ -72,12 +74,17 @@ public class user extends Thread
             }
             
          }
-         else if(!sentence.equals(""))
+         else if(sentence.length() > 0)
          {
-	    for(int i=0; i<userList.size(); i++)
-	    {
-		userList.get(i).write(sentence);
-	    }
+            for(int i=0; i<userList.size(); i++)
+            {
+               user u = userList.get(i);
+               if(u != this)
+               {
+                  u.write(sentence);
+               }
+             
+            }
             System.out.println(sentence);
             sentence = "";
          }
@@ -100,10 +107,12 @@ public class user extends Thread
 
    public void write(String s)
    {
-	try{
-		outToClient.write(s, 0, s.length());
-	}catch(Exception e){
-		System.out.println("Cannot write to client\n"+e);
-	}
+      try{
+         outToClient.write(s, 0, s.length());
+         outToClient.flush();
+      }
+      catch(Exception e){
+         System.out.println("Cannot write to client\n"+e);
+      }
    }
 }
