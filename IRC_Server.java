@@ -6,10 +6,11 @@ import java.util.*; //for lists
 
 public class IRC_Server
 {
+	private static ArrayList<user> clients = new ArrayList<user>();
    public static void main(String args[]) throws Exception
    {
       Scanner scan = new Scanner(System.in);
-      List<user> clients = new ArrayList<user>();
+     // List<user> clients = new ArrayList<user>();
       String ServerInput;
       String capitalizedSentence;
       String userQuit = "/quit";

@@ -44,8 +44,7 @@ public class user extends Thread
             else{
                sentence = "";
             }
-         }
-         catch (Exception e){
+         }catch (Exception e){
             System.out.println(e);
          }
          
