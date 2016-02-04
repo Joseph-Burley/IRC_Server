@@ -108,6 +108,7 @@ public class user extends Thread
    {
       try{
          outToClient.write(s, 0, s.length());
+	 outToClient.newLine();
          outToClient.flush();
       }
       catch(Exception e){
