@@ -15,7 +15,7 @@ public class channel{
    {
       name = n;
       try{
-         log_out = new FileWriter(new File("logs/"+name+".txt"), true);
+         log_out = new FileWriter(new File("channelLogs/"+name+".txt"), true);
          log_out.write("it works!!!\n");
          log_out.flush();
       }
