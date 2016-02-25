@@ -33,7 +33,7 @@ public class Listener extends Thread
          if(running)
          {
             try{
-               clients.add(new user(welcomeSocket.accept(), clients)); //create the user and add them
+               clients.add(new user(welcomeSocket.accept())); //create the user and add them
                clients.get(clients.size()-1).start(); //run the user
                System.out.println("added client");
             }

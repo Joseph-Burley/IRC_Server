@@ -11,16 +11,16 @@ public class user extends Thread
    private String userQuit = "/quit";
    private String changeNick = "/nick";
    private Socket connection;
-   private List<user> userList;
+   private List<channel> channelList;
    private BufferedReader inFromClient;
    private BufferedWriter outToClient;
    
    private boolean running = true;
    
-   user(Socket s, List<user> L)
+   user(Socket s)
    {
       connection = s;
-      userList = L;
+      channelList = new ArrayList<channel>();
       try
       {
          inFromClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -29,6 +29,11 @@ public class user extends Thread
       catch(Exception e){
          System.out.println("Cannot create BufferedReader for user");
       }
+   }
+   
+   public String getNickName()
+   {
+      return nickName;
    }
    
    public void run() 
@@ -44,7 +49,8 @@ public class user extends Thread
             else{
                sentence = "";
             }
-         }catch (Exception e){
+         }
+         catch (Exception e){
             System.out.println(e);
          }
          
@@ -75,13 +81,12 @@ public class user extends Thread
          }
          else if(sentence.length() > 0)
          {
-            for(int i=0; i<userList.size(); i++)
+            for(int i=0; i<channelList.size(); i++)
             {
-               user u = userList.get(i);
-               if(u != this)
-               {
-                  u.write(sentence);
-               }
+               channel c = channelList.get(i);
+               
+               c.writeUsers(sentence);
+               
              
             }
             System.out.println(sentence);
@@ -92,7 +97,7 @@ public class user extends Thread
       try{
          System.out.println("Quitting");
          connection.close();
-         userList.remove(this);
+         //userList.remove(this);
       }
       catch (Exception e){
          System.out.println("Cannot quit user thread for some reason\n"+e);
@@ -108,7 +113,7 @@ public class user extends Thread
    {
       try{
          outToClient.write(s, 0, s.length());
-	 outToClient.newLine();
+         outToClient.newLine();
          outToClient.flush();
       }
       catch(Exception e){

@@ -6,11 +6,12 @@ import java.util.*; //for lists
 
 public class IRC_Server
 {
-	private static ArrayList<user> clients = new ArrayList<user>();
+   private static ArrayList<user> clients = new ArrayList<user>();
    public static void main(String args[]) throws Exception
    {
       Scanner scan = new Scanner(System.in);
      // List<user> clients = new ArrayList<user>();
+      List<channel> channelList = new ArrayList<channel>();
       String ServerInput;
       String capitalizedSentence;
       String userQuit = "/quit";
@@ -22,6 +23,8 @@ public class IRC_Server
       Listener ears = new Listener(clients);
       ears.start();
       
+      channel system = new channel("System");
+      
       
       //DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
       
@@ -29,7 +32,8 @@ public class IRC_Server
       do
       {
          System.out.println("/list to list users\n"+
-                            "/quit to stop server");
+                            "/quit to stop server\n"+
+                            "/sys to write to system log");
          ServerInput = scan.nextLine();
          
          if(ServerInput.equals(userList))
@@ -48,6 +52,10 @@ public class IRC_Server
             {
                clients.get(i).quit();
             }
+         }
+         else if(ServerInput.contains("/sys"))
+         {
+            system.writeLog(ServerInput);
          }
          else
          {
