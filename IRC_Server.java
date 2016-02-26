@@ -4,14 +4,12 @@ import java.io.*;
 import java.net.*;
 import java.util.*; //for lists
 
-public class IRC_Server
+public class IRC_Server implements globals
 {
-   private static ArrayList<user> clients = new ArrayList<user>();
+   
    public static void main(String args[]) throws Exception
    {
       Scanner scan = new Scanner(System.in);
-     // List<user> clients = new ArrayList<user>();
-      List<channel> channelList = new ArrayList<channel>();
       String ServerInput;
       String capitalizedSentence;
       String userQuit = "/quit";
@@ -20,7 +18,7 @@ public class IRC_Server
       
       //create listener thread that accecpts incoming connections
       
-      Listener ears = new Listener(clients);
+      Listener ears = new Listener();
       ears.start();
       
       channel system = new channel("System");
@@ -38,9 +36,9 @@ public class IRC_Server
          
          if(ServerInput.equals(userList))
          {
-            for(int i=0; i<clients.size(); i++)
+            for(int i=0; i<globalUsers.size(); i++)
             {
-               System.out.println(clients.get(i).toString());
+               System.out.println(globalUsers.get(i).toString());
             }
          }
          else if(ServerInput.equals(userQuit))
@@ -48,9 +46,9 @@ public class IRC_Server
             running = false;
             ears.quit();
             ears = null;
-            for(int i=0; i<clients.size(); i++)
+            for(int i=0; i<globalUsers.size(); i++)
             {
-               clients.get(i).quit();
+               globalUsers.get(i).quit();
             }
          }
          else if(ServerInput.contains("/sys"))

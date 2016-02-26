@@ -6,16 +6,14 @@ import java.net.*;
 import java.util.*;
 
 
-public class Listener extends Thread
+public class Listener extends Thread implements globals
 {
-   private List<user> clients;
    private int port = 6789;
    private ServerSocket welcomeSocket;
    private boolean running = true;
    
-   Listener(List<user> c) //constructor
+   Listener() //constructor
    {
-      clients = c;
       try
       {
          welcomeSocket = new ServerSocket(port); //create new socket and bind it to port 6789
@@ -33,8 +31,8 @@ public class Listener extends Thread
          if(running)
          {
             try{
-               clients.add(new user(welcomeSocket.accept())); //create the user and add them
-               clients.get(clients.size()-1).start(); //run the user
+               globalUsers.add(new user(welcomeSocket.accept())); //create the user and add them
+               globalUsers.get(globalUsers.size()-1).start(); //run the user
                System.out.println("added client");
             }
 	    catch(SocketException s)

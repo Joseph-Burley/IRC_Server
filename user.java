@@ -4,14 +4,15 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class user extends Thread
+public class user extends Thread implements globals
 {
    private String nickName = "";
    private String sentence;
    private String userQuit = "/quit";
    private String changeNick = "/nick";
    private Socket connection;
-   private List<channel> channelList;
+   private List<channel> localChannels = new ArrayList<channel>();
+   private channel activeChannel;
    private BufferedReader inFromClient;
    private BufferedWriter outToClient;
    
@@ -20,7 +21,6 @@ public class user extends Thread
    user(Socket s)
    {
       connection = s;
-      channelList = new ArrayList<channel>();
       try
       {
          inFromClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -29,11 +29,30 @@ public class user extends Thread
       catch(Exception e){
          System.out.println("Cannot create BufferedReader for user");
       }
+      
+      activeChannel = sys_channel;
    }
    
    public String getNickName()
    {
       return nickName;
+   }
+   
+   private void changeChannel(String chName)
+   {
+      boolean changed = false;
+      for(int i=0; i< globalChannels.size(); i++)
+      {
+         if(globalChannels.get(i).getName().equals(chName))
+         {
+            activeChannel = globalChannels.get(i);
+            write("Changed to channel: " + activeChannel.getName());
+            changed = true;
+            break;
+         }
+      }
+      if(!changed)
+         write("Channel " + chName + " does not exist.");
    }
    
    public void run() 
@@ -80,15 +99,8 @@ public class user extends Thread
             
          }
          else if(sentence.length() > 0)
-         {
-            for(int i=0; i<channelList.size(); i++)
-            {
-               channel c = channelList.get(i);
-               
-               c.writeUsers(sentence);
-               
-             
-            }
+         {   
+            activeChannel.writeUsers(sentence);
             System.out.println(sentence);
             sentence = "";
          }

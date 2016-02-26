@@ -5,7 +5,8 @@ import java.util.*; //lists, scanner
 import java.io.File; //file
 import java.io.FileWriter;
 
-public class channel{
+public class channel implements globals
+{
    private List<user> userList;
    private String name;
    private FileWriter log_out;
@@ -30,6 +31,11 @@ public class channel{
    {
       userList.add(u);
       writeLog("User: " + u.getNickName() +" was added\n");
+   }
+   
+   public String getName()
+   {
+      return name;
    }
    
    public void writeUsers(String s)
