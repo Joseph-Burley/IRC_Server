@@ -152,6 +152,7 @@ ClientBin/
 *.pfx
 *.publishsettings
 *.class
+*$1.class
 
 # RIA/Silverlight projects
 Generated_Code/
